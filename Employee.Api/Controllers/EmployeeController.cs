@@ -131,7 +131,7 @@ public class EmployeeController : ControllerBase
 
         var extension = Path.GetExtension(file.FileName);
 
-        var serverPath = Path.Combine("uploads", $"{randomFileName}{extension}");
+        var serverPath = $"uploads/{randomFileName}{extension}";
 
         var path = Path.Combine(webRootPath, serverPath);
         await using var stream = System.IO.File.Create(path);

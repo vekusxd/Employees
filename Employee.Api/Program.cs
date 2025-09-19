@@ -9,7 +9,7 @@ builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(opts => opts.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
