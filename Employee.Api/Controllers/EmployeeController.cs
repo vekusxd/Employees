@@ -178,4 +178,23 @@ public class EmployeeController : ControllerBase
         
         return NoContent();
     }
+
+    [HttpGet("files/{fileId:guid}/preview")]
+    public async Task<IActionResult> PreviewEmployeeFile(Guid fileId, CancellationToken cancellationToken)
+    {
+        var file = _dbContext.EmployeeFiles.AsNoTracking().FirstOrDefault(e => e.Id == fileId);
+
+        if (file is null)
+            return NotFound();
+
+        var filePath = Path.Combine(_env.WebRootPath, file.Path);
+        
+        if (!System.IO.File.Exists(filePath))
+            return NotFound();
+
+        var contentType = MimeMapping.MimeUtility.GetMimeMapping(file.Path);
+        var fileContent = await System.IO.File.ReadAllBytesAsync(filePath, cancellationToken);
+        
+        return File(fileContent, contentType, fileDownloadName: null);
+    }
 }
