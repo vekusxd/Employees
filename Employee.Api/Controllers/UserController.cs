@@ -70,14 +70,16 @@ public class UserController : ControllerBase
     [HttpGet("logout")]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken = default)
     {
-        var user = await _userManager.GetUserAsync(User);
+        var userIdClaims = User.Claims.First(c => c.Type == "userid");
+        
+        var userId = Guid.Parse(userIdClaims.Value);
+        
+        var user = await _userManager.FindByIdAsync(userId.ToString());
         
         if (user is null)
             return Unauthorized();
-        
-        user.RefreshTokens.Clear();
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
+        await _dbContext.RefreshTokens.Where(t => t.UserId == userId).ExecuteDeleteAsync(cancellationToken);
         return NoContent();
     }
 
