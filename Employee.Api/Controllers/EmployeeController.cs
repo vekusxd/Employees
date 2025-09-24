@@ -1,6 +1,7 @@
 ﻿using Employee.Api.Contracts;
 using Employee.Api.Database;
 using Employee.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace Employee.Api.Controllers;
 
 [ApiController]
 [Route("api/employees")]
+[Authorize]
 public class EmployeeController : ControllerBase
 {
     private readonly AppDbContext _dbContext;
@@ -78,7 +80,15 @@ public class EmployeeController : ControllerBase
         _dbContext.Employees.Add(employee);
         await _dbContext.SaveChangesAsync();
 
-        return Ok(employee);
+        return Ok(new EmployeeResponse
+        {
+            Id = employee.Id,
+            Birthday = employee.Birthday,
+            FirstName = employee.FirstName,
+            LastName = employee.LastName,
+            Patronymic = employee.Patronymic,
+            Username = employee.Username,
+        });
     }
 
     [HttpPut("{id:guid}")]
