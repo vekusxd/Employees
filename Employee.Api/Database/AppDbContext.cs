@@ -10,6 +10,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
 {
     public DbSet<Models.Employee> Employees { get; set; }
     public DbSet<EmployeeFile> EmployeeFiles { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
         
